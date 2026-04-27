@@ -147,3 +147,90 @@ classDiagram
 ```
 
 </details>
+
+# 4. Stocks
+
+Actuellement, l'inventaire est factice. Il s'agit en effet d'une liste de produits, sans indication de quantité.
+On ne pourrait pas stocker la donnée de quantité dans un produit; en effet, cette donnée est décorrélée de l'identité d'un produit.
+Nous allons donc créer une classe d'association entre `Produit` et `Application`, afin de gérer cette liaison.
+
+<details>
+<summary>Proposition de solution</summary>
+
+```mermaid
+classDiagram
+  class Product {
+    -string name
+    -double price
+    +Product(string name)
+    +Product setPrice(double price)
+    +string getName()
+    +double getPrice()
+  }
+
+  class Date {
+    -int y
+    -int m
+    -int d
+    +Date(int y, int m, int d)
+    +int getY()
+    +int getM()
+    +int getD()
+  }
+
+  class Order {
+    -Product product
+    -int qtty
+    -double unitPrice
+    -Date orderDate
+    -Date deliveryDate
+    +Order(Product product, int qtty, double unitPrice, Date orderDate)
+    +Order setDeliveryDate(Date deliveryDate)
+    +Order setQtty(int qtty)
+    +Order setUnitPrice(double unitPrice)
+    +Product getProduct()
+    +int getQtty()
+    +double getUnitPrice()
+    +Date getOrderDate()
+    +Date getDeliveryDate()
+  }
+
+  class Stock {
+    -Product product
+    -int qtty
+    +Stock(Product product, int qtty)
+    +Stock setQtty(int qtty)
+  }
+
+  class Application {
+    -list~Product~ productBase
+    -list~Stock~ inventory
+    -list~Order~ orders
+    +Product createProduct(string name)
+    +Product findProduct(string name)
+    +Application setStock(Product product, int qtty)
+    +Application setProductPrice(Product product, double price)
+    +Order createOrder(Product product)
+    +list~Order~ findOrders()
+    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)
+    +list~Order~ findOrdersByOrderDate(Date orderDate)
+    +list~Order~ findOrdersByProduct(Product product)
+  }
+
+  Product "0,n" *-- Application : productBase
+  Stock "0,n" *-- Application : inventory
+  Product "1,1" o-- Stock : product
+  Product "1,1" o-- Order : product
+  Date "1,1" *-- Order : order
+  Date "0,1" *-- Order : delivery
+  Order "0,n" *-- Application : orders
+```
+
+</details>
+
+> [!Note]
+> Il existe plusieurs façons de modéliser et implémenter cette solution.
+> Normalement, une classe d'association a une certaine représentation; ici, elle est représentée ainsi car Mermaid, le langage de représentation de diagrammes, ne gère pas l'affichage d'une classe d'association.
+
+# 5. Produits périssables (héritage)
+
