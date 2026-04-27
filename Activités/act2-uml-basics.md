@@ -200,6 +200,7 @@ classDiagram
     -int qtty
     +Stock(Product product, int qtty)
     +Stock setQtty(int qtty)
+    +int getQtty()
   }
 
   class Application {
@@ -209,6 +210,7 @@ classDiagram
     +Product createProduct(string name)
     +Product findProduct(string name)
     +Application setStock(Product product, int qtty)
+    +int getStock(Product product)
     +Application setProductPrice(Product product, double price)
     +Order createOrder(Product product)
     +list~Order~ findOrders()
@@ -233,4 +235,109 @@ classDiagram
 > Normalement, une classe d'association a une certaine représentation; ici, elle est représentée ainsi car Mermaid, le langage de représentation de diagrammes, ne gère pas l'affichage d'une classe d'association.
 
 # 5. Produits périssables (héritage)
+
+On souhaite distinguer les produits périssables des non-périssables.
+Un produit périssable a une durée de conservation, ainsi qu'une température maximale de conservation.
+Ce qui signifie qu'un stock doit pouvoir indiquer, dans le cas d'une donnée périssable, la DLC.
+
+<details>
+<summary>Proposition de solution</summary>
+
+```mermaid
+classDiagram
+  class Product <<Abstract>> {
+    -string name
+    -double price
+    +Product(string name)
+    +Product setPrice(double price)
+    +string getName()
+    +double getPrice()
+  }
+
+  class UnperishableProduct { }
+
+  class PerishableProduct {
+    -int livingDuration
+    -int maxTemp
+    +PerishableProduct setLivingDuration(int ld)
+    +PerishableProduct setMaxTemp(int md)
+    +int getLivingDuration()
+    +int getMaxTemp()
+  }
+
+  class Date {
+    -int y
+    -int m
+    -int d
+    +Date(int y, int m, int d)
+    +int getY()
+    +int getM()
+    +int getD()
+  }
+
+  class Order {
+    -Product product
+    -int qtty
+    -double unitPrice
+    -Date orderDate
+    -Date deliveryDate
+    +Order(Product product, int qtty, double unitPrice, Date orderDate)
+    +Order setDeliveryDate(Date deliveryDate)
+    +Order setQtty(int qtty)
+    +Order setUnitPrice(double unitPrice)
+    +Product getProduct()
+    +int getQtty()
+    +double getUnitPrice()
+    +Date getOrderDate()
+    +Date getDeliveryDate()
+  }
+
+  class Stock {
+    -Product product
+    -int qtty
+    +Stock(Product product, int qtty)
+    +Stock setQtty(int qtty)
+    +int getQtty()
+  }
+
+  class PerishableStock {
+    -Date dlc
+    +PerishableStock(PerishableProduct product, int qtty)
+    +PerishableStock setDlc(Date dlc)
+    +Date getDlc()
+  }
+
+  class Application {
+    -list~Product~ productBase
+    -list~Stock~ inventory
+    -list~Order~ orders
+    +Product createProduct(string name)
+    +Product findProduct(string name)
+    +Application setStock(Product product, int qtty)
+    +Application setPerishableStock(PerishableProduct product, int qtty)
+    +int getStock(Product product)
+    +Application setProductPrice(Product product, double price)
+    +Order createOrder(Product product)
+    +list~Order~ findOrders()
+    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)
+    +list~Order~ findOrdersByOrderDate(Date orderDate)
+    +list~Order~ findOrdersByProduct(Product product)
+  }
+
+  Product <|-- UnperishableProduct
+  Product <|-- PerishableProduct
+  Product "0,n" --* Application : productBase
+  Stock "0,n" --* Application : inventory
+  Stock <|-- PerishableStock
+  PerishableStock *-- "1" PerishableProduct
+  Product "1" --o Stock : product
+  Product "1" --o Order : product
+  Date "1" --* Order : order
+  Date "0,1" --* Order : delivery
+  Order "0,n" --* Application : orders
+```
+
+</details>
+
+# 6. Staticité
 
