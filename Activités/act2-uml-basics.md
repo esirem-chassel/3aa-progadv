@@ -72,7 +72,7 @@ classDiagram
     +Application setProductPrice(Product product, double price)
   }
 
-  Product "0,n" *-- Application
+  Product "0,n" --* Application
 ```
 
 </details>
@@ -139,11 +139,11 @@ classDiagram
     +list~Order~ findOrdersByProduct(Product product)
   }
 
-  Product "0,n" *-- Application : inventory
-  Product "1,1" o-- Order : product
-  Date "1,1" *-- Order : order
-  Date "0,1" *-- Order : delivery
-  Order "0,n" *-- Application : orders
+  Product "0,n" --* Application : inventory
+  Product "1,1" --o Order : product
+  Date "1,1" --* Order : order
+  Date "0,1" --* Order : delivery
+  Order "0,n" --* Application : orders
 ```
 
 </details>
@@ -219,13 +219,13 @@ classDiagram
     +list~Order~ findOrdersByProduct(Product product)
   }
 
-  Product "0,n" *-- Application : productBase
-  Stock "0,n" *-- Application : inventory
-  Product "1,1" o-- Stock : product
-  Product "1,1" o-- Order : product
-  Date "1,1" *-- Order : order
-  Date "0,1" *-- Order : delivery
-  Order "0,n" *-- Application : orders
+  Product "0,n" --* Application : productBase
+  Stock "0,n" --* Application : inventory
+  Product "1,1" --o Stock : product
+  Product "1,1" --o Order : product
+  Date "1,1" --* Order : order
+  Date "0,1" --* Order : delivery
+  Order "0,n" --* Application : orders
 ```
 
 </details>
