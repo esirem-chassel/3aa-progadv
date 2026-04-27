@@ -252,6 +252,7 @@ classDiagram
     +Product setPrice(double price)
     +string getName()
     +double getPrice()
+    +bool isPerishable()*
   }
 
   class UnperishableProduct { }
@@ -295,6 +296,7 @@ classDiagram
   class Stock {
     -Product product
     -int qtty
+    #bool perishable
     +Stock(Product product, int qtty)
     +Stock setQtty(int qtty)
     +int getQtty()
@@ -339,5 +341,482 @@ classDiagram
 
 </details>
 
+> [!Note]
+> Il existe plusieurs manières d'implémenter cet héritage.
+> Dans des langages comme Java ou PHP, par exemple, nous n'avons pas besoin du booléen `perishable` car le langage permet de `cast` automatiquement sans perte via réflexion.
+> De même, SOLID nous conseillerait ici de diviser `Stock` en deux entités héritées, et de créer ensuite deux listes séparées dans `Application`.
+
 # 6. Staticité
 
+La classe `Application` contient un grand nombre de données réutilisables.
+Cette classe ne devrait être initialisée qu'une seule fois, et ses méthodes devraient appartenir à la classe elle-même, nous aux objets.
+
+Nous allons pour cela ajouter de la staticité, transformant tous les élements en statique.
+
+<details>
+<summary>Proposition de solution</summary>
+
+```mermaid
+classDiagram
+  class Product <<Abstract>> {
+    -string name
+    -double price
+    +Product(string name)
+    +Product setPrice(double price)
+    +string getName()
+    +double getPrice()
+    +bool isPerishable()*
+  }
+
+  class UnperishableProduct { }
+
+  class PerishableProduct {
+    -int livingDuration
+    -int maxTemp
+    +PerishableProduct setLivingDuration(int ld)
+    +PerishableProduct setMaxTemp(int md)
+    +int getLivingDuration()
+    +int getMaxTemp()
+  }
+
+  class Date {
+    -int y
+    -int m
+    -int d
+    +Date(int y, int m, int d)
+    +int getY()
+    +int getM()
+    +int getD()
+  }
+
+  class Order {
+    -Product product
+    -int qtty
+    -double unitPrice
+    -Date orderDate
+    -Date deliveryDate
+    +Order(Product product, int qtty, double unitPrice, Date orderDate)
+    +Order setDeliveryDate(Date deliveryDate)
+    +Order setQtty(int qtty)
+    +Order setUnitPrice(double unitPrice)
+    +Product getProduct()
+    +int getQtty()
+    +double getUnitPrice()
+    +Date getOrderDate()
+    +Date getDeliveryDate()
+  }
+
+  class Stock {
+    -Product product
+    -int qtty
+    #bool perishable
+    +Stock(Product product, int qtty)
+    +Stock setQtty(int qtty)
+    +int getQtty()
+  }
+
+  class PerishableStock {
+    -Date dlc
+    +PerishableStock(PerishableProduct product, int qtty)
+    +PerishableStock setDlc(Date dlc)
+    +Date getDlc()
+  }
+
+  class Application {
+    -list~Product~ productBase$
+    -list~Stock~ inventory$
+    -list~Order~ orders$
+    +Product createProduct(string name)$
+    +Product findProduct(string name)$
+    +Application setStock(Product product, int qtty)$
+    +Application setPerishableStock(PerishableProduct product, int qtty)$
+    +int getStock(Product product)$
+    +Application setProductPrice(Product product, double price)$
+    +Order createOrder(Product product)$
+    +list~Order~ findOrders()$
+    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)$
+    +list~Order~ findOrdersByOrderDate(Date orderDate)$
+    +list~Order~ findOrdersByProduct(Product product)$
+  }
+
+  Product <|-- UnperishableProduct
+  Product <|-- PerishableProduct
+  Product "0,n" --* Application : productBase
+  Stock "0,n" --* Application : inventory
+  Stock <|-- PerishableStock
+  PerishableStock *-- "1" PerishableProduct
+  Product "1" --o Stock : product
+  Product "1" --o Order : product
+  Date "1" --* Order : order
+  Date "0,1" --* Order : delivery
+  Order "0,n" --* Application : orders
+```
+
+</details>
+
+> [!Warning]
+> Un bug de rendu Mermaid empêche la visualisation des éléments déclarés statiques comme étant... statiques (soulignés).
+> Vérifiez la source au besoin.
+
+Il semnble néanmoins ridicule de TOUT transformer en statique ici.
+On souhaite n'avoir qu'une seule instance de la classe Application existant au même moment, cependant.
+Créons donc un singleton :
+
+<details>
+<summary>Proposition de solution</summary>
+
+```mermaid
+classDiagram
+  class Product <<Abstract>> {
+    -string name
+    -double price
+    +Product(string name)
+    +Product setPrice(double price)
+    +string getName()
+    +double getPrice()
+    +bool isPerishable()*
+  }
+
+  class UnperishableProduct { }
+
+  class PerishableProduct {
+    -int livingDuration
+    -int maxTemp
+    +PerishableProduct setLivingDuration(int ld)
+    +PerishableProduct setMaxTemp(int md)
+    +int getLivingDuration()
+    +int getMaxTemp()
+  }
+
+  class Date {
+    -int y
+    -int m
+    -int d
+    +Date(int y, int m, int d)
+    +int getY()
+    +int getM()
+    +int getD()
+  }
+
+  class Order {
+    -Product product
+    -int qtty
+    -double unitPrice
+    -Date orderDate
+    -Date deliveryDate
+    +Order(Product product, int qtty, double unitPrice, Date orderDate)
+    +Order setDeliveryDate(Date deliveryDate)
+    +Order setQtty(int qtty)
+    +Order setUnitPrice(double unitPrice)
+    +Product getProduct()
+    +int getQtty()
+    +double getUnitPrice()
+    +Date getOrderDate()
+    +Date getDeliveryDate()
+  }
+
+  class Stock {
+    -Product product
+    -int qtty
+    #bool perishable
+    +Stock(Product product, int qtty)
+    +Stock setQtty(int qtty)
+    +int getQtty()
+  }
+
+  class PerishableStock {
+    -Date dlc
+    +PerishableStock(PerishableProduct product, int qtty)
+    +PerishableStock setDlc(Date dlc)
+    +Date getDlc()
+  }
+
+  class Application {
+    -Application instance$
+    -list~Product~ productBase
+    -list~Stock~ inventory
+    -list~Order~ orders
+    -Application()
+    +Application getInstance()$
+    +Product createProduct(string name)
+    +Product findProduct(string name)
+    +Application setStock(Product product, int qtty)
+    +Application setPerishableStock(PerishableProduct product, int qtty)
+    +int getStock(Product product)
+    +Application setProductPrice(Product product, double price)
+    +Order createOrder(Product product)
+    +list~Order~ findOrders()
+    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)
+    +list~Order~ findOrdersByOrderDate(Date orderDate)
+    +list~Order~ findOrdersByProduct(Product product)
+  }
+
+  Product <|-- UnperishableProduct
+  Product <|-- PerishableProduct
+  Product "0,n" --* Application : productBase
+  Stock "0,n" --* Application : inventory
+  Stock <|-- PerishableStock
+  PerishableStock *-- "1" PerishableProduct
+  Product "1" --o Stock : product
+  Product "1" --o Order : product
+  Date "1" --* Order : order
+  Date "0,1" --* Order : delivery
+  Order "0,n" --* Application : orders
+```
+
+</details>
+
+Ainsi, seuls `instance` et `getInstance` sont statiques.
+Si pour une raison quelconque on souhaite "nettoyer" la mémoire en détruisant Application, alors on peut désormais le faire.
+
+# 7. Factory (interface)
+
+Actuellement, les Produits sont les mêmes sans distinction entre Perishable et non, dans les Orders.
+Implémentez un distingo pour les produits périssables ou non pour les commandes également.
+
+<details>
+<summary>Proposition de solution</summary>
+
+```mermaid
+classDiagram
+  class Product <<Abstract>> {
+    -string name
+    -double price
+    +Product(string name)
+    +Product setPrice(double price)
+    +string getName()
+    +double getPrice()
+    +bool isPerishable()*
+  }
+
+  class UnperishableProduct { }
+
+  class PerishableProduct {
+    -int livingDuration
+    -int maxTemp
+    +PerishableProduct setLivingDuration(int ld)
+    +PerishableProduct setMaxTemp(int md)
+    +int getLivingDuration()
+    +int getMaxTemp()
+  }
+
+  class Date {
+    -int y
+    -int m
+    -int d
+    +Date(int y, int m, int d)
+    +int getY()
+    +int getM()
+    +int getD()
+  }
+
+  class Order {
+    -Product product
+    -int qtty
+    -double unitPrice
+    -Date orderDate
+    -Date deliveryDate
+    +Order(Product product, int qtty, double unitPrice, Date orderDate)
+    +Order setDeliveryDate(Date deliveryDate)
+    +Order setQtty(int qtty)
+    +Order setUnitPrice(double unitPrice)
+    +Product getProduct()
+    +int getQtty()
+    +double getUnitPrice()
+    +Date getOrderDate()
+    +Date getDeliveryDate()
+  }
+
+  class PerishableOrder {
+    -Date dlc
+    +PerishableOrder(PerishableProduct product, int qtty, double unitPrice, Date orderDate)
+    +PerishableOrder setDlc(Date dlc)
+    +Date getDlc()
+  }
+
+  class Stock {
+    -Product product
+    -int qtty
+    #bool perishable
+    +Stock(Product product, int qtty)
+    +Stock setQtty(int qtty)
+    +int getQtty()
+  }
+
+  class PerishableStock {
+    -Date dlc
+    +PerishableStock(PerishableProduct product, int qtty)
+    +PerishableStock setDlc(Date dlc)
+    +Date getDlc()
+  }
+
+  class Application {
+    -Application instance$
+    -list~Product~ productBase
+    -list~Stock~ inventory
+    -list~Order~ orders
+    -Application()
+    +Application getInstance()$
+    +Product createProduct(string name)
+    +Product findProduct(string name)
+    +Application setStock(Product product, int qtty)
+    +Application setPerishableStock(PerishableProduct product, int qtty)
+    +int getStock(Product product)
+    +Application setProductPrice(Product product, double price)
+    +Order createOrder(Product product)
+    +list~Order~ findOrders()
+    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)
+    +list~Order~ findOrdersByOrderDate(Date orderDate)
+    +list~Order~ findOrdersByProduct(Product product)
+  }
+
+  Product <|-- UnperishableProduct
+  Product <|-- PerishableProduct
+  Product "0,n" --* Application : productBase
+  Stock "0,n" --* Application : inventory
+  Stock <|-- PerishableStock
+  PerishableStock *-- "1" PerishableProduct
+  Product "1" --o Stock : product
+  Product "1" --o Order : product
+  Date "1" --* Order : order
+  Date "0,1" --* Order : delivery
+  Date "0,1" --* PerishableStock : dlc
+  Date "0,1" --* PerishableOrder : dlc
+  Order <|-- PerishableOrder
+  Order "0,n" --* Application : orders
+```
+
+</details>
+
+On souhaite désormais ajouter une méthode unique à la fois pour les Produits et les Orders pour connaître la DLC d'un produit en stock ou commandé.
+Une méthode comme `getProductDlc(???)` qui fonctionnerait sur un produit en stock ou en commende.
+Pour cela, nous allons explicitement ajouter le fait que ces classes implémentent **forcément** un moyen de connaître la DLC, une méthode `getDlc`.
+Cela passe par une interface, qu'on crée en indiquant nos méthodes à implémenter.
+Puis, chaque classe implémentant cette interface **devra** implémenter ces méthodes.
+Ainsi, on peut utiliser le nom de l'interface comme un nom de classe dans nos différentes méthodes.
+
+<details>
+<summary>Proposition de solution</summary>
+
+```mermaid
+classDiagram
+  class Product <<Abstract>> {
+    -string name
+    -double price
+    +Product(string name)
+    +Product setPrice(double price)
+    +string getName()
+    +double getPrice()
+    +bool isPerishable()*
+  }
+
+  class UnperishableProduct { }
+
+  class PerishableProduct {
+    -int livingDuration
+    -int maxTemp
+    +PerishableProduct setLivingDuration(int ld)
+    +PerishableProduct setMaxTemp(int md)
+    +int getLivingDuration()
+    +int getMaxTemp()
+  }
+
+  class Date {
+    -int y
+    -int m
+    -int d
+    +Date(int y, int m, int d)
+    +int getY()
+    +int getM()
+    +int getD()
+  }
+
+  class Order {
+    -Product product
+    -int qtty
+    -double unitPrice
+    -Date orderDate
+    -Date deliveryDate
+    +Order(Product product, int qtty, double unitPrice, Date orderDate)
+    +Order setDeliveryDate(Date deliveryDate)
+    +Order setQtty(int qtty)
+    +Order setUnitPrice(double unitPrice)
+    +Product getProduct()
+    +int getQtty()
+    +double getUnitPrice()
+    +Date getOrderDate()
+    +Date getDeliveryDate()
+  }
+
+  class PerishableOrder {
+    -Date dlc
+    +PerishableOrder(PerishableProduct product, int qtty, double unitPrice, Date orderDate)
+    +PerishableOrder setDlc(Date dlc)
+    +Date getDlc()
+  }
+
+  class Stock {
+    -Product product
+    -int qtty
+    #bool perishable
+    +Stock(Product product, int qtty)
+    +Stock setQtty(int qtty)
+    +int getQtty()
+  }
+
+  class PerishableStock {
+    -Date dlc
+    +PerishableStock(PerishableProduct product, int qtty)
+    +PerishableStock setDlc(Date dlc)
+    +Date getDlc()
+  }
+
+  class Application {
+    -Application instance$
+    -list~Product~ productBase
+    -list~Stock~ inventory
+    -list~Order~ orders
+    -Application()
+    +Application getInstance()$
+    +Product createProduct(string name)
+    +Product findProduct(string name)
+    +Application setStock(Product product, int qtty)
+    +Application setPerishableStock(PerishableProduct product, int qtty)
+    +int getStock(Product product)
+    +Application setProductPrice(Product product, double price)
+    +Order createOrder(Product product)
+    +list~Order~ findOrders()
+    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)
+    +list~Order~ findOrdersByOrderDate(Date orderDate)
+    +list~Order~ findOrdersByProduct(Product product)
+    +getProductDlc(HasDlc stockOrOrder)
+  }
+
+  class HasDlc <<Interface>> {
+    +Date getDlc()*
+  }
+
+  Product <|-- UnperishableProduct
+  Product <|-- PerishableProduct
+  Product "0,n" --* Application : productBase
+  Stock "0,n" --* Application : inventory
+  Stock <|-- PerishableStock
+  PerishableStock *-- "1" PerishableProduct
+  Product "1" --o Stock : product
+  Product "1" --o Order : product
+  Date "1" --* Order : order
+  Date "0,1" --* Order : delivery
+  Date "0,1" --* PerishableStock : dlc
+  Date "0,1" --* PerishableOrder : dlc
+  Order <|-- PerishableOrder
+  Order "0,n" --* Application : orders
+  HasDlc <|.. PerishableStock : implements
+  HasDlc <|.. PerishableOrder : implements
+  HasDlc <.. Application
+```
+
+</details>
+
+> [!Tip]
+> Ici, l'exemple n'est pas forcément le meilleur, mais il permet de voir un cas d'usage.
+> Une interface est un contrat passé, permettant d'affirmer que telle classe **DOIT** fournir une ou plusieurs méthodes, donc *est capable de* faire ce que l'interface déclare.
