@@ -820,3 +820,8 @@ classDiagram
 > [!Tip]
 > Ici, l'exemple n'est pas forcément le meilleur, mais il permet de voir un cas d'usage.
 > Une interface est un contrat passé, permettant d'affirmer que telle classe **DOIT** fournir une ou plusieurs méthodes, donc *est capable de* faire ce que l'interface déclare.
+
+# 8. Diagramme d'objets
+
+Modélisez un diagramme d'objets lorsqu'on a saisi deux produits "A" (classique) et "B" (périssable, 2 semaines), avec 3 unités de A en commande et 2 unités de B en stock à date de péremption dans une semaine, ainsi que 3 unités de B en stock à date de péremption pour aujourd'hui.
+
