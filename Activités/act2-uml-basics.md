@@ -569,7 +569,7 @@ classDiagram
 Ainsi, seuls `instance` et `getInstance` sont statiques.
 Si pour une raison quelconque on souhaite "nettoyer" la mémoire en détruisant Application, alors on peut désormais le faire.
 
-# 7. Factory (interface)
+# 7. isPerishable (interface)
 
 Actuellement, les Produits sont les mêmes sans distinction entre Perishable et non, dans les Orders.
 Implémentez un distingo pour les produits périssables ou non pour les commandes également.
