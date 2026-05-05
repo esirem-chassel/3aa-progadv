@@ -79,7 +79,7 @@ int i = sc.nextInt(); // obtient le prochain entier lu
 Nous allons commencer par réaliser une abstraction de ces méthodes, en utilisant une classe `CLI` chargé de l'interaction avec l'utilisateur via la console.
 
 Créez donc une méthode `askString` qui prendra en paramètre un `String`, affichera cette chaîne, et attendra une saisie utilisateur avant de renvoyer cette saisie utilisateur.
-Testez votre classe dans votre `main`.
+Testez votre classe dans votre `main`, pour demander son nom à l'utilisateur.
 
 <details>
 <summary>Proposition de solution</summary>
@@ -109,9 +109,85 @@ System.out.println("Hello, "+name);
 
 # 3. Pour les entiers
 
-Faisons donc `askInt`, qui fait la même chose pour des entiers !
+Faisons donc `askInt`, qui fait la même chose pour des entiers, afin de demander à l'utilisateur son âge !
+
+> [!Caution]
+> Pour le moment, effectuez SOIT le test du nom, SOIT le test de l'âge, mais pas les deux.
+
+<details>
+<summary>Proposition de solution</summary>
+
+```java
+public int askInt(String question) {
+    int r = 0;
+    System.out.println(question);
+    Scanner sc = new Scanner(System.in);
+    r = sc.nextInt();
+    sc.close();
+    return r;
+}
+
+// in main
+int r = cli.askInt("Age ?");
+System.out.println("Age= "+String.valueOf(r));
+```
+
+</details>
 
 
-# 4. Avec vérifications
+# 4. Réusage
 
-Modifions 
+Testez de demander le nom, puis l'âge... Que se passe-t-il ?
+
+Cette erreur survient parce que l'on clôt le flux d'entrée.
+Il faudrait ne pas le clore, pour commencer, mais aussi, tant qu'à faire, utiliser un unique `Scanner`, qu'on ne rouvrirait pas à chaque fois.
+
+Utilisez donc le constructeur de votre classe CLI pour ouvrir le `Scanner`, que vous allez utiliser dans vos différentes méthodes.
+Profitez-en pour tester vos procédures dans une boucle, qui continuera tant que l'âge saisi ne sera pas égal à 0.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+    public class CLI {
+    private Scanner scanner;
+    public CLI() {
+        this.scanner = new Scanner(System.in);
+    }
+
+    public String askString(String question) {
+        String r = "";
+        System.out.println(question);
+        r = this.scanner.nextLine();
+        return r;
+    }
+
+    public int askInt(String question) {
+        int r = 0;
+        System.out.println(question);
+        r = this.scanner.nextInt();
+        return r;
+    }
+}
+
+// fichier principal
+
+class TestApp {
+    public static void main(String[] args) {
+        CLI cli = new CLI();
+        boolean co = true;
+        do {
+            String name = cli.askString("Quel est votre nom ?");
+            System.out.println("Hello, "+name);
+            int r = cli.askInt("Age ?");
+            System.out.println("Age= "+String.valueOf(r));
+            co = (r <= 0);
+        } while(co);
+    }
+}
+
+```
+
+</details>
+
+Que constatez-vous ? Cela peut arriver car `nextInt`, contrairement à `nextLine`, ne "consomme" pas le saut de ligne, qui se retrouve comme parasitant le prochain appel à `nextLine`. Comment résoudriez-vous cela ?
