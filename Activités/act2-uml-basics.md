@@ -31,12 +31,12 @@ Créez donc cette classe en UML, en gardant en tête les principes de base de l'
 ```mermaid
 classDiagram
   class Product {
-    -string name
-    -double price
-    +Product(string name)
-    +Product setPrice(double price)
-    +string getName()
-    +double getPrice()
+    -name: string
+    -price: double
+    +Product(name: string)
+    +setPrice(price: double) Product
+    +getName() string
+    +getPrice() double
   }
 ```
 
@@ -57,19 +57,19 @@ Modélisez donc cela en UML (attention à prendre en compte le lien avec `Produc
 ```mermaid
 classDiagram
   class Product {
-    -string name
-    -double price
-    +Product(string name)
-    +Product setPrice(double price)
-    +string getName()
-    +double getPrice()
+    -name: string
+    -price: double
+    +Product(name: string)
+    +setPrice(price: double) Product
+    +getName() string
+    +getPrice() double
   }
 
   class Application {
-    -list~Product~ inventory
-    +Product createProduct(string name)
-    +Product findProduct(string name)
-    +Application setProductPrice(Product product, double price)
+    -inventory: list~Product~
+    +createProduct(name: string) Product
+    +findProduct(name: string) Product
+    +setProductPrice(product: Product, price: double) Application
   }
 
   Product "0,n" --* Application
@@ -91,52 +91,52 @@ On doit pouvoir retrouver une liste de commandes à partir d'une date de command
 ```mermaid
 classDiagram
   class Product {
-    -string name
-    -double price
-    +Product(string name)
-    +Product setPrice(double price)
-    +string getName()
-    +double getPrice()
+    -name: string
+    -price: double
+    +Product(name: string)
+    +setPrice(price: double) Product
+    +getName() string
+    +getPrice() double
   }
 
   class Date {
-    -int y
-    -int m
-    -int d
-    +Date(int y, int m, int d)
-    +int getY()
-    +int getM()
-    +int getD()
+    -y: int
+    -m: int
+    -d: int
+    +Date(y: int, m: int, d: int)
+    +getY() int
+    +getM() int
+    +getD() int
   }
 
   class Order {
-    -Product product
-    -int qtty
-    -double unitPrice
-    -Date orderDate
-    -Date deliveryDate
-    +Order(Product product, int qtty, double unitPrice, Date orderDate)
-    +Order setDeliveryDate(Date deliveryDate)
-    +Order setQtty(int qtty)
-    +Order setUnitPrice(double unitPrice)
-    +Product getProduct()
-    +int getQtty()
-    +double getUnitPrice()
-    +Date getOrderDate()
-    +Date getDeliveryDate()
+    -product: Product
+    -qtty: int
+    -unitPrice: double
+    -orderDate: Date
+    -deliveryDate: Date
+    +Order(product: Product, qtty: int, unitPrice: double, orderDate: orderDate)
+    +setDeliveryDate(deliveryDate: Date) Order
+    +setQtty(qtty: int) Order
+    +setUnitPrice(unitPrice: double) Order
+    +getProduct() Product
+    +getQtty() int
+    +getUnitPrice() double
+    +getOrderDate() Date
+    +getDeliveryDate() Date
   }
 
   class Application {
-    -list~Product~ inventory
-    -list~Order~ orders
-    +Product createProduct(string name)
-    +Product findProduct(string name)
-    +Application setProductPrice(Product product, double price)
-    +Order createOrder(Product product)
-    +list~Order~ findOrders()
-    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)
-    +list~Order~ findOrdersByOrderDate(Date orderDate)
-    +list~Order~ findOrdersByProduct(Product product)
+    -inventory: list~Product~
+    -orders: list~Order~
+    +createProduct(name: string) Product
+    +findProduct(name: string) Product
+    +setProductPrice(product: Product, price: double) Application
+    +createOrder(product: Product) Order
+    +findOrders() list~Order~
+    +findOrdersByDeliveryDate(deliveryDate: Date) list~Order~
+    +findOrdersByOrderDate(orderDate: Date) list~Order~
+    +findOrdersByProduct(product: Product) list~Order~
   }
 
   Product "0,n" --* Application : inventory
@@ -160,63 +160,63 @@ Nous allons donc créer une classe d'association entre `Produit` et `Application
 ```mermaid
 classDiagram
   class Product {
-    -string name
-    -double price
-    +Product(string name)
-    +Product setPrice(double price)
-    +string getName()
-    +double getPrice()
+    -name: string
+    -price: double
+    +Product(name: string)
+    +setPrice(price: double): Product
+    +getName(): string
+    +getPrice(): double
   }
 
   class Date {
-    -int y
-    -int m
-    -int d
-    +Date(int y, int m, int d)
-    +int getY()
-    +int getM()
-    +int getD()
+    -y: int
+    -m: int
+    -d: int
+    +Date(y: int, m: int, d: int)
+    +getY() int
+    +getM() int
+    +getD() int
   }
 
   class Order {
-    -Product product
-    -int qtty
-    -double unitPrice
-    -Date orderDate
-    -Date deliveryDate
-    +Order(Product product, int qtty, double unitPrice, Date orderDate)
-    +Order setDeliveryDate(Date deliveryDate)
-    +Order setQtty(int qtty)
-    +Order setUnitPrice(double unitPrice)
-    +Product getProduct()
-    +int getQtty()
-    +double getUnitPrice()
-    +Date getOrderDate()
-    +Date getDeliveryDate()
+    -product: Product
+    -qtty: int
+    -unitPrice: double
+    -orderDate: Date
+    -deliveryDate: Date
+    +Order(product: Product, qtty: int, unitPrice: double, orderDate: Date)
+    +setDeliveryDate(deliveryDate: Date) Order
+    +setQtty(qtty: int) Order
+    +setUnitPrice(unitPrice: double) Order
+    +getProduct() Product
+    +getQtty() int
+    +getUnitPrice() double
+    +getOrderDate() Date
+    +getDeliveryDate() Date
   }
 
   class Stock {
-    -Product product
-    -int qtty
-    +Stock(Product product, int qtty)
-    +Stock setQtty(int qtty)
-    +int getQtty()
+    -product: Product
+    -qtty: int
+    +Stock(product: Product, qtty: int)
+    +setQtty(qtty: int) Stock
+    +getQtty() int
   }
 
   class Application {
-    -list~Product~ productBase
-    -list~Stock~ inventory
-    -list~Order~ orders
-    +Product createProduct(string name)
-    +Product findProduct(string name)
-    +Application setStock(Product product, int qtty)
-    +int getStock(Product product)
-    +Application setProductPrice(Product product, double price)
-    +Order createOrder(Product product)
-    +list~Order~ findOrders()
-    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)
-    +list~Order~ findOrdersByOrderDate(Date orderDate)
-    +list~Order~ findOrdersByProduct(Product product)
+    -productBase: list~Product~ 
+    -inventory: list~Stock~ 
+    -orders: list~Order~
+    +createProduct(name: string) Product
+    +findProduct(name: string) Product
+    +setStock(product: Product, qtty: int) Application
+    +getStock(product: Product) int
+    +setProductPrice(product: Product, price: double) Application
+    +createOrder(product: Product) Order
+    +findOrders() list~Order~
+    +findOrdersByDeliveryDate(deliveryDate: Date) list~Order~
+    +findOrdersByOrderDate(orderDate: Date) list~Order~
+    +findOrdersByProduct(product: Product) list~Order~
   }
 
   Product "0,n" --* Application : productBase
@@ -246,84 +246,83 @@ Ce qui signifie qu'un stock doit pouvoir indiquer, dans le cas d'une donnée pé
 ```mermaid
 classDiagram
   class Product <<Abstract>> {
-    -string name
-    -double price
-    +Product(string name)
-    +Product setPrice(double price)
-    +string getName()
-    +double getPrice()
-    +bool isPerishable()*
+    -name: string
+    -price: double
+    +Product(name: string)
+    +setPrice(price: double) Product
+    +getName() string
+    +getPrice() double
+    +isPerishable()* bool
   }
 
   class UnperishableProduct { }
 
   class PerishableProduct {
-    -int livingDuration
-    -int maxTemp
-    +PerishableProduct setLivingDuration(int ld)
-    +PerishableProduct setMaxTemp(int md)
-    +int getLivingDuration()
-    +int getMaxTemp()
+    -livingDuration: int
+    -maxTemp: int
+    +setLivingDuration(ld: ld) PerishableProduct
+    +setMaxTemp(md: md) PerishableProduct
+    +getLivingDuration() int
+    +getMaxTemp() int
   }
 
   class Date {
-    -int y
-    -int m
-    -int d
-    +Date(int y, int m, int d)
-    +int getY()
-    +int getM()
-    +int getD()
+    -y: int
+    -m: int
+    -d: int
+    +Date(y: int, m: int, d: int)
+    +getY() int
+    +getM() int
+    +getD() int
   }
 
   class Order {
-    -Product product
-    -int qtty
-    -double unitPrice
-    -Date orderDate
-    -Date deliveryDate
-    +Order(Product product, int qtty, double unitPrice, Date orderDate)
-    +Order setDeliveryDate(Date deliveryDate)
-    +Order setQtty(int qtty)
-    +Order setUnitPrice(double unitPrice)
-    +Product getProduct()
-    +int getQtty()
-    +double getUnitPrice()
-    +Date getOrderDate()
-    +Date getDeliveryDate()
+    -product: Product
+    -qtty: int
+    -unitPrice: double
+    -orderDate: Date
+    -deliveryDate: Date
+    +Order(product: Product, qtty: int, unitPrice: double, orderDate: Date)
+    +setDeliveryDate(deliveryDate: Date) Order
+    +setQtty(qtty: int) Order
+    +setUnitPrice(unitPrice: double) Order
+    +getProduct() Product
+    +getQtty() int
+    +getUnitPrice() double
+    +getOrderDate() Date
+    +getDeliveryDate() Date
   }
 
   class Stock {
-    -Product product
-    -int qtty
-    #bool perishable
+    -product: Product
+    -qtty: int
+    #perishable: bool
     +Stock(Product product, int qtty)
-    +Stock setQtty(int qtty)
-    +int getQtty()
+    +setQtty(int qtty) Stock
+    +getQtty() int
   }
 
   class PerishableStock {
-    -Date dlc
-    +PerishableStock(PerishableProduct product, int qtty)
-    +PerishableStock setDlc(Date dlc)
-    +Date getDlc()
+    -dlc: Date
+    +PerishableStock(product: PerishableProduct, qtty: int)
+    +setDlc(dlc: Date) PerishableStock
+    +getDlc() Date
   }
 
   class Application {
-    -list~Product~ productBase
-    -list~Stock~ inventory
-    -list~Order~ orders
-    +Product createProduct(string name)
-    +Product findProduct(string name)
-    +Application setStock(Product product, int qtty)
-    +Application setPerishableStock(PerishableProduct product, int qtty)
-    +int getStock(Product product)
-    +Application setProductPrice(Product product, double price)
-    +Order createOrder(Product product)
-    +list~Order~ findOrders()
-    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)
-    +list~Order~ findOrdersByOrderDate(Date orderDate)
-    +list~Order~ findOrdersByProduct(Product product)
+    -productBase: list~Product~ 
+    -inventory: list~Stock~ 
+    -orders: list~Order~
+    +createProduct(name: string) Product
+    +findProduct(name: string) Product
+    +setStock(product: Product, qtty: int) Application
+    +getStock(product: Product) int
+    +setProductPrice(product: Product, price: double) Application
+    +createOrder(product: Product) Order
+    +findOrders() list~Order~
+    +findOrdersByDeliveryDate(deliveryDate: Date) list~Order~
+    +findOrdersByOrderDate(orderDate: Date) list~Order~
+    +findOrdersByProduct(product: Product) list~Order~
   }
 
   Product <|-- UnperishableProduct
@@ -359,84 +358,83 @@ Nous allons pour cela ajouter de la staticité, transformant tous les élements 
 ```mermaid
 classDiagram
   class Product <<Abstract>> {
-    -string name
-    -double price
-    +Product(string name)
-    +Product setPrice(double price)
-    +string getName()
-    +double getPrice()
-    +bool isPerishable()*
+    -name: string
+    -price: double
+    +Product(name: string)
+    +setPrice(price: double) Product
+    +getName() string
+    +getPrice() double
+    +isPerishable()* bool
   }
 
   class UnperishableProduct { }
 
   class PerishableProduct {
-    -int livingDuration
-    -int maxTemp
-    +PerishableProduct setLivingDuration(int ld)
-    +PerishableProduct setMaxTemp(int md)
-    +int getLivingDuration()
-    +int getMaxTemp()
+    -livingDuration: int
+    -maxTemp: int
+    +setLivingDuration(ld: ld) PerishableProduct
+    +setMaxTemp(md: md) PerishableProduct
+    +getLivingDuration() int
+    +getMaxTemp() int
   }
 
   class Date {
-    -int y
-    -int m
-    -int d
-    +Date(int y, int m, int d)
-    +int getY()
-    +int getM()
-    +int getD()
+    -y: int
+    -m: int
+    -d: int
+    +Date(y: int, m: int, d: int)
+    +getY() int
+    +getM() int
+    +getD() int
   }
 
   class Order {
-    -Product product
-    -int qtty
-    -double unitPrice
-    -Date orderDate
-    -Date deliveryDate
-    +Order(Product product, int qtty, double unitPrice, Date orderDate)
-    +Order setDeliveryDate(Date deliveryDate)
-    +Order setQtty(int qtty)
-    +Order setUnitPrice(double unitPrice)
-    +Product getProduct()
-    +int getQtty()
-    +double getUnitPrice()
-    +Date getOrderDate()
-    +Date getDeliveryDate()
+    -product: Product
+    -qtty: int
+    -unitPrice: double
+    -orderDate: Date
+    -deliveryDate: Date
+    +Order(product: Product, qtty: int, unitPrice: double, orderDate: Date)
+    +setDeliveryDate(deliveryDate: Date) Order
+    +setQtty(qtty: int) Order
+    +setUnitPrice(unitPrice: double) Order
+    +getProduct() Product
+    +getQtty() int
+    +getUnitPrice() double
+    +getOrderDate() Date
+    +getDeliveryDate() Date
   }
 
   class Stock {
-    -Product product
-    -int qtty
-    #bool perishable
+    -product: Product
+    -qtty: int
+    #perishable: bool
     +Stock(Product product, int qtty)
-    +Stock setQtty(int qtty)
-    +int getQtty()
+    +setQtty(int qtty) Stock
+    +getQtty() int
   }
 
   class PerishableStock {
-    -Date dlc
-    +PerishableStock(PerishableProduct product, int qtty)
-    +PerishableStock setDlc(Date dlc)
-    +Date getDlc()
+    -dlc: Date
+    +PerishableStock(product: PerishableProduct, qtty: int)
+    +setDlc(dlc: Date) PerishableStock
+    +getDlc() Date
   }
 
   class Application {
-    -list~Product~ productBase$
-    -list~Stock~ inventory$
-    -list~Order~ orders$
-    +Product createProduct(string name)$
-    +Product findProduct(string name)$
-    +Application setStock(Product product, int qtty)$
-    +Application setPerishableStock(PerishableProduct product, int qtty)$
-    +int getStock(Product product)$
-    +Application setProductPrice(Product product, double price)$
-    +Order createOrder(Product product)$
-    +list~Order~ findOrders()$
-    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)$
-    +list~Order~ findOrdersByOrderDate(Date orderDate)$
-    +list~Order~ findOrdersByProduct(Product product)$
+    -productBase: list~Product~$
+    -inventory: list~Stock~$
+    -orders: list~Order~$
+    +createProduct(name: string) Product$
+    +findProduct(name: string) Product$
+    +setStock(product: Product, qtty: int) Application$
+    +getStock(product: Product) int$
+    +setProductPrice(product: Product, price: double) Application$
+    +createOrder(product: Product) Order$
+    +findOrders() list~Order~$
+    +findOrdersByDeliveryDate(deliveryDate: Date) list~Order~$
+    +findOrdersByOrderDate(orderDate: Date) list~Order~$
+    +findOrdersByProduct(product: Product) list~Order~$
   }
 
   Product <|-- UnperishableProduct
@@ -468,87 +466,86 @@ Créons donc un singleton :
 ```mermaid
 classDiagram
   class Product <<Abstract>> {
-    -string name
-    -double price
-    +Product(string name)
-    +Product setPrice(double price)
-    +string getName()
-    +double getPrice()
-    +bool isPerishable()*
+    -name: string
+    -price: double
+    +Product(name: string)
+    +setPrice(price: double) Product
+    +getName() string
+    +getPrice() double
+    +isPerishable()* bool
   }
 
   class UnperishableProduct { }
 
   class PerishableProduct {
-    -int livingDuration
-    -int maxTemp
-    +PerishableProduct setLivingDuration(int ld)
-    +PerishableProduct setMaxTemp(int md)
-    +int getLivingDuration()
-    +int getMaxTemp()
+    -livingDuration: int
+    -maxTemp: int
+    +setLivingDuration(ld: ld) PerishableProduct
+    +setMaxTemp(md: md) PerishableProduct
+    +getLivingDuration() int
+    +getMaxTemp() int
   }
 
   class Date {
-    -int y
-    -int m
-    -int d
-    +Date(int y, int m, int d)
-    +int getY()
-    +int getM()
-    +int getD()
+    -y: int
+    -m: int
+    -d: int
+    +Date(y: int, m: int, d: int)
+    +getY() int
+    +getM() int
+    +getD() int
   }
 
   class Order {
-    -Product product
-    -int qtty
-    -double unitPrice
-    -Date orderDate
-    -Date deliveryDate
-    +Order(Product product, int qtty, double unitPrice, Date orderDate)
-    +Order setDeliveryDate(Date deliveryDate)
-    +Order setQtty(int qtty)
-    +Order setUnitPrice(double unitPrice)
-    +Product getProduct()
-    +int getQtty()
-    +double getUnitPrice()
-    +Date getOrderDate()
-    +Date getDeliveryDate()
+    -product: Product
+    -qtty: int
+    -unitPrice: double
+    -orderDate: Date
+    -deliveryDate: Date
+    +Order(product: Product, qtty: int, unitPrice: double, orderDate: Date)
+    +setDeliveryDate(deliveryDate: Date) Order
+    +setQtty(qtty: int) Order
+    +setUnitPrice(unitPrice: double) Order
+    +getProduct() Product
+    +getQtty() int
+    +getUnitPrice() double
+    +getOrderDate() Date
+    +getDeliveryDate() Date
   }
 
   class Stock {
-    -Product product
-    -int qtty
-    #bool perishable
+    -product: Product
+    -qtty: int
+    #perishable: bool
     +Stock(Product product, int qtty)
-    +Stock setQtty(int qtty)
-    +int getQtty()
+    +setQtty(int qtty) Stock
+    +getQtty() int
   }
 
   class PerishableStock {
-    -Date dlc
-    +PerishableStock(PerishableProduct product, int qtty)
-    +PerishableStock setDlc(Date dlc)
-    +Date getDlc()
+    -dlc: Date
+    +PerishableStock(product: PerishableProduct, qtty: int)
+    +setDlc(dlc: Date) PerishableStock
+    +getDlc() Date
   }
 
   class Application {
     -Application instance$
-    -list~Product~ productBase
-    -list~Stock~ inventory
-    -list~Order~ orders
+    -productBase: list~Product~
+    -inventory: list~Stock~
+    -orders: list~Order~
     -Application()
-    +Application getInstance()$
-    +Product createProduct(string name)
-    +Product findProduct(string name)
-    +Application setStock(Product product, int qtty)
-    +Application setPerishableStock(PerishableProduct product, int qtty)
-    +int getStock(Product product)
-    +Application setProductPrice(Product product, double price)
-    +Order createOrder(Product product)
-    +list~Order~ findOrders()
-    +list~Order~ findOrdersByDeliveryDate(Date deliveryDate)
-    +list~Order~ findOrdersByOrderDate(Date orderDate)
-    +list~Order~ findOrdersByProduct(Product product)
+    +getInstance() Application$
+    +createProduct(name: string) Product
+    +findProduct(name: string) Product
+    +setStock(product: Product, qtty: int) Application
+    +getStock(product: Product) int
+    +setProductPrice(product: Product, price: double) Application
+    +createOrder(product: Product) Order
+    +findOrders() list~Order~
+    +findOrdersByDeliveryDate(deliveryDate: Date) list~Order~
+    +findOrdersByOrderDate(orderDate: Date) list~Order~
+    +findOrdersByProduct(product: Product) list~Order~
   }
 
   Product <|-- UnperishableProduct
