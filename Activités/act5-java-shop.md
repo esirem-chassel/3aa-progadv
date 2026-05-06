@@ -293,7 +293,69 @@ public class Product {
 
 ## 1.2 Classe Application
 
-La Classe Application contient notemment une liste de produits.
-Créons un tableau simple pour commencer.
+La classe `Application` contient notemment une liste de produits.
+Créons un tableau simple pour commencer. Dans votre constructeur de la classe `Application`, initialisez donc votre tableau :
+```java
+private Product[] inventory;
+public Application() {
+    this.inventory = new Product[]{};
+}
+```
 
+Créez la méthode `Product createProduct(String name)`, qui va :
+- initialiser un nouveau produit
+- ajouter ce produit dans le tableau `inventory`
+- renvoyer le produit créé
+
+Quel problème rencontrez-vous ?
+
+Eh oui ! En Java, comme en C++, la taille des tableaux est fixé à la compilation. Heureusement, Java, comme C++, dispose de structures dédiées pour gérer des tableaux à taille dynamique.
+Une classe qui permet de faire cela est l'`ArrayList`. Ces structures génériques (qui existent aussi de manière similaire en C++ !) prennent un "paramètre" indiquant le type d'objet stocké, via des chevrons, comme ceci : `ArrayList<int>` (pour une liste d'entiers).
+
+> [!Note]
+> `ArrayList` est une classe contenue dans le package `java.util`. Il vous faut donc `import java.util.ArrayList`.
+
+Modifions donc notre classe `Application` pour stocker un `ArrayList` de `Product`s.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public class Application {
+    private ArrayList<Product> inventory;
+
+    public Application() {
+        this.inventory = new ArrayList<Product>();
+    }
+
+    Product createProduct(String name) {
+        Product p = new Product(name);
+        this.inventory.add(p);
+        return p;
+    }
+}
+```
+</details>
+
+
+> [!Warning]
+> Ceci (l'usage d'`ArrayList` et non d'un array basique) est un détail d'implémentation, ce qui signifie que c'est un élément propre au langage.
+> Vous ne devez donc PAS le faire apparaître dans votre UML. Ce n'est pas une modification du système, mais un détail d'implémentation lié au langage.
+
+Nous allons tester, et voir un effet du "tout objet" adopté par Java.
+
+Créez donc une méthode `String toString()` dans `Application` comme suit :
+
+```java
+public String toString() {
+    String r = "";
+    for(Product p: this.inventory) {
+        r += p.toString() + "\n";
+    }
+    return r;
+}
+```
+
+Dans votre `main`, ajouter l'instanciation d'un nouvel objet `Application`, et créez `p1` et `p2` respectivement de nom "ABC" et "DEF".
+Modifiez ensuite le prix de `p1`, et affichez (grâce à `toString`) votre objet `Application`. Que constatez-vous ?
 
