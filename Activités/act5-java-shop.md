@@ -149,7 +149,7 @@ Profitez-en pour tester vos procédures dans une boucle, qui continuera tant que
     <summary>Proposition de solution</summary>
 
 ```java
-    public class CLI {
+public class CLI {
     private Scanner scanner;
     public CLI() {
         this.scanner = new Scanner(System.in);
@@ -181,7 +181,7 @@ class TestApp {
             System.out.println("Hello, "+name);
             int r = cli.askInt("Age ?");
             System.out.println("Age= "+String.valueOf(r));
-            co = (r <= 0);
+            co = (r > 0);
         } while(co);
     }
 }
@@ -191,3 +191,109 @@ class TestApp {
 </details>
 
 Que constatez-vous ? Cela peut arriver car `nextInt`, contrairement à `nextLine`, ne "consomme" pas le saut de ligne, qui se retrouve comme parasitant le prochain appel à `nextLine`. Comment résoudriez-vous cela ?
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public int askInt(String question) {
+    int r = 0;
+    System.out.println(question);
+    r = this.scanner.nextInt();
+    this.scanner.nextLine(); // remove any trailing EOL
+    return r;
+}
+```
+
+</details>
+
+On peut toujours créer plusieurs instances de la classe `CLI`, ce qui pourrait poser des soucis de conflits (puisqu'on se base sur le même flux), et semble peu logique : une seule instance de `CLI` devrait exister à un instant T. Comment résoudriez-vous ce problème ?
+
+## 0.6 Affichage
+
+Nous allons maintenant rajouter une méthode d'affichage, `CLI print(String txt[, boolean eol = true])`. Celle-ci affichera `txt`, avec un saut de ligne si l'argument `eol` est fourni à `true` (ou s'il est omi). Cette méthode renverra l'objet en lui-même, ce qui permettra de chaîner les appels (ex : `cli.print(a, false).print(b, false).print(c);` ).
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public CLI print(String txt) {
+    return this.print(txt, true);
+}
+
+public CLI print(String txt, boolean eol) {
+    if(eol) {
+        System.out.println(txt);
+    } else {
+        System.out.print(txt);
+    }
+    return this;
+}
+```
+
+</details>
+
+## 0.7 Saisie d'un décimal
+
+Ajoutez une méthode pour la saisie d'un décimal. Testez vos méthodes dans votre `main`.
+
+> [!Warning]
+> Rencontrez-vous des problèmes pour détecter un point ET une virgule ?
+> C'est normal, [il existe des solutions](https://stackoverflow.com/questions/42332273/scanning-doubles-when-i-separate-decimals-with-comma-or-dot) mais à vous de trouver ce qui vous convient !
+
+# 1. Application Produit
+
+En se basant sur votre conception dans l'[activité 2](https://github.com/esirem-chassel/3aa-progadv/blob/main/Activit%C3%A9s/act2-uml-basics.md), commencez à développer votre application.
+Il est conseillé de créer un nouveau projet dédié, et de reprendre votre classe CLI du projet précédent.
+
+## 1.1 Classe Produit
+
+En plus de créer votre classe Produit tel que demandé auparavant, créez une méthode `String toString()` qui renverra l'objet sous la forme `<nom> (<prix>)`.
+
+> [!Tip]
+> Une méthode `String toString()` en Java est quelque peu magique : elle sera appellée automatiquement dès que vous essayerez de "convertir" votre objet en chaîne de caractères,
+> y compris, par exemple, quand vous tenterez de l'afficher en console !
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public class Product {
+    private String name;
+    private double price;
+    public Product(String name) {
+        this.name = name;
+    }
+
+    public Product setPrice(double price) {
+        this.price = price;
+        return this;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public double getPrice() {
+        return this.price;
+    }
+    
+    @Override
+    public String toString() {
+        return this.getName()+" ("+String.valueOf(this.getPrice())+")";
+    }
+}
+```
+
+</details>
+
+> [!Caution]
+> Vous remarquerez que j'ai changé le nom de `Produit` vers `Product`.
+> Cette étape peut se produire avant ou après la modélisation UML à votre convenance; j'ai tendance néanmoins à vous conseiller de réaliser la traduction durant la modélisation.
+
+## 1.2 Classe Application
+
+La Classe Application contient notemment une liste de produits.
+Créons un tableau simple pour commencer.
+
+
