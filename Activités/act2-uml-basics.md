@@ -77,7 +77,7 @@ classDiagram
 
 </details>
 
-A partir de maintenant, il faudra penser à enrichier votre classe Application des différentes possibilités offertes.
+A partir de maintenant, il faudra penser à enrichir votre classe Application des différentes possibilités offertes.
 
 # 3. Commandes
 
