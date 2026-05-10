@@ -896,3 +896,331 @@ int getStock(Product product) {
 ```
 
 </details>
+
+# 6. Perishable Stuff
+
+Implémentez `PerishableProduct` et `UnperishableProduct`.
+
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public class UnperishableProduct extends Product {
+    public UnperishableProduct(String name) {
+        super(name);
+    }
+}
+
+public class PerishableProduct extends Product {
+    private int livingDuration;
+    private int maxTemp;
+    public PerishableProduct(String name) {
+        super(name);
+    }
+    public int getLivingDuration() {
+        return livingDuration;
+    }
+    public PerishableProduct setLivingDuration(int livingDuration) {
+        this.livingDuration = livingDuration;
+        return this;
+    }
+    public int getMaxTemp() {
+        return maxTemp;
+    }
+    public PerishableProduct setMaxTemp(int maxTemp) {
+        this.maxTemp = maxTemp;
+        return this;
+    }    
+}
+```
+
+</details>
+
+Transformez `Product` en une classe abstraite.
+Que se passe-t-il dans la classe `Application`, spécialement sur la méthode `createProduct` ?
+
+Comment résolveriez-vous ce problème ?
+
+<details>
+    <summary>Proposition de solution</summary>
+
+Nous adoptons ici la plus simple (et, ironiquement, la moins propre) approche.
+Une meilleur approche serait de passer par un design pattern comme Factory (ou un de ses dérivés).
+
+```java
+Product createProduct(String name) throws ProductDuplicateException {
+    if(null != this.findProduct(name)) {
+        throw new ProductDuplicateException(name);
+    }
+    UnperishableProduct p = new UnperishableProduct(name);
+    this.productsBase.add(p);
+    return p;
+}
+
+PerishableProduct createPerishableProduct(String name, int livingDuration, int maxTemp) throws ProductDuplicateException {
+    if(null != this.findProduct(name)) {
+        throw new ProductDuplicateException(name);
+    }
+    PerishableProduct p = new PerishableProduct(name);
+    p.setLivingDuration(livingDuration);
+    p.setMaxTemp(maxTemp);
+    this.productsBase.add(p);
+    return p;
+}
+```
+
+</details>
+
+# 7. Singleton
+
+Implémentez le singleton pour la classe `Application`, pour éviter que deux instances de cette classe puissent exister en même temps.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+private static Application instance = null;
+public static Application getInstance() {
+    if(Application.instance == null) {
+        Application.instance = new Application();
+    }
+    return Application.instance;
+}
+
+private ArrayList<Product> productsBase;
+private ArrayList<Order> orders;
+private ArrayList<Stock> inventory;
+
+private Application() {
+    this.productsBase = new ArrayList<Product>();
+    this.orders = new ArrayList<Order>();
+    this.inventory = new ArrayList<Stock>();
+}
+```
+
+</details>
+
+# 8. Gestion de la DLC
+
+## 8.1 Commande et Stock
+
+Ajoutez les classes PerishableOrder et PerishableStock, selon les principes suivants :
+- chaque classe dépendra désormais, en constructeur, de `PerishableProduct` et non `Product`
+- pour un `PerishableStock`, on initialisera une DLC à la date courante + la durée de conservation
+- pour un `PerishableOrder`, on initialisera une DLC à la date de commande + la durée de conservation
+- les deux classes doivent implémenter leur propre `toString` pour faire apparaître la DLC
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+// PerishableOrder
+
+import java.time.LocalDate;
+
+public class PerishableOrder extends Order {
+    private LocalDate dlc;
+    public PerishableOrder(PerishableProduct product, int qtty, double unitPrice, LocalDate orderDate) {
+        super(product, qtty, unitPrice, orderDate);
+        this.dlc = orderDate.plusDays(product.getLivingDuration());
+    }
+
+    public LocalDate getDlc() {
+        return dlc;
+    }
+
+    public PerishableOrder setDlc(LocalDate dlc) {
+        this.dlc = dlc;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " (DLC : " + this.dlc + ")";
+    }
+    
+}
+
+// PerishableStock
+
+import java.time.LocalDate;
+
+public class PerishableStock extends Stock {
+    private LocalDate dlc;
+    public PerishableStock(PerishableProduct product, int qtty) {
+        super(product, qtty);
+        this.dlc = LocalDate.now().plusDays(product.getLivingDuration());
+    }
+
+    public LocalDate getDlc() {
+        return dlc;
+    }
+
+    public PerishableStock setDlc(LocalDate dlc) {
+        this.dlc = dlc;
+        return this;
+    }
+    
+    @Override
+    public String toString() {
+        return super.toString() + " (DLC : " + this.dlc + ")";
+    }
+}
+
+
+```
+
+</details>
+
+## 8.2 Génération
+
+Modifiez les méthodes `createOrder` et `setStock` :
+- `createOrder` doit vérifier si le `Product` est un `PerishableProduct` et, en ce cas, créer un `PerishableOrder`
+- `setStock` doit, lors de la première injection de stock, vérifier la même chose pour créer un `PerishableStock` à la place
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+Order createOrder(Product product) {
+    Order o;
+    if(product instanceof PerishableProduct) {
+        o = new PerishableOrder((PerishableProduct) product, 1, product.getPrice(), LocalDate.now()); // PerishableOrder DOIT recevoir un PerishableProduct !
+    } else {
+        o = new Order(product, 1, product.getPrice(), LocalDate.now());
+    }
+    this.orders.add(o);
+    return o;
+}
+
+Application setStock(Product product, int qtty) {
+    boolean found = false;
+    for(Stock s: this.inventory) {
+        if(s.getProduct().equals(product)) {
+            s.setQtty(s.getQtty() + qtty);
+            found = true;
+        }
+    }
+    if(!found) {
+        if(product instanceof PerishableProduct) {
+            this.inventory.add(new PerishableStock((PerishableProduct) product, qtty));
+        } else {
+            this.inventory.add(new Stock(product, qtty));
+        }
+    }
+    return this;
+}
+```
+
+</details>
+
+## 8.3 Test
+
+Testez votre code dans votre main !
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public static void main(String[] args) {
+    Application app = Application.getInstance();
+    Product pa = null;
+    PerishableProduct pb = null;
+    try {
+        pa = app.createProduct("A");
+        app.createOrder(pa);
+    } catch(Exception e) { e.printStackTrace(); }
+    try {
+        pb = app.createPerishableProduct("B", 100, 15);
+        app.createOrder(pb);
+
+    } catch(Exception e) { e.printStackTrace(); }
+    app.setStock(pa, 1);
+    app.setStock(pb, 3);
+    System.out.println(app);
+}
+```
+
+</details>
+
+## 8.4 DLCable
+
+Créez une interface `hasDlc`, qui déclare une seule méthode : `LocalDate getDlc()`.
+Implémentez cette méthode sur `PerishableOrder` et `PerishableStock`.
+
+> [!Note]
+> Si vous avez suivi les solutions ou déjà implémentés les méthodes demandées auparavant, vous devriez avoir les méthodes déjà implémentées.
+> Sinon, vous obtiendrez des erreurs dans l'IDE (et la compilation) concernant les deux classes !
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+// hasDlc
+import java.time.LocalDate;
+
+public interface hasDlc {
+    public LocalDate getDlc();
+}
+
+// PerishableStock
+public class PerishableStock extends Stock implements hasDlc {
+// [...]
+
+// PerishableOrder
+public class PerishableOrder extends Order implements hasDlc {
+
+```
+
+</details>
+
+Ajoutez enfin deux méthodes dans `Application` :
+- `boolean isExpired(hasDlc)`, qui renverra `true` si l'élément a sa Dlc dans le passé, `false` sinon
+- `int daysBeforeExpire(hasDlc)`, qui renverra le nombre de jours restants avant l'expiration de l'élément
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+// Application
+public boolean isExpired(hasDlc el) {
+    return el.getDlc().isBefore(LocalDate.now());
+}
+
+public int daysBeforeExpire(hasDlc el) {
+    return (int) LocalDate.now().until(el.getDlc(), ChronoUnit.DAYS);
+}
+
+// main
+public static void main(String[] args) {
+    Application app = Application.getInstance();
+    Product pa = null;
+    PerishableProduct pb = null;
+    PerishableOrder po = null;
+    try {
+        pa = app.createProduct("A");
+        app.createOrder(pa);
+    } catch(Exception e) { e.printStackTrace(); }
+    try {
+        pb = app.createPerishableProduct("B", 100, 15);
+        po = (PerishableOrder) app.createOrder(pb);
+    } catch(Exception e) { e.printStackTrace(); }
+    app.setStock(pa, 1);
+    app.setStock(pb, 3);
+    System.out.println(app);
+    System.out.println("Jours avant expiration : " + app.daysBeforeExpire(po));
+}
+```
+
+</details>
+
+# 9. Implémentation complète
+
+Nous avons tout le nécessaire !
+Modifiez votre `main` pour que l'utilisateur puisse :
+- enregistrer des produits dans la base
+  - en incluant la question de "est-ce périssable" et les données liées
+- créer une commande pour un produit existant
+- ajouter un stock d'un produit existant
+
