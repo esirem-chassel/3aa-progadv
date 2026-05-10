@@ -55,9 +55,9 @@ Attention en ce cas à retirer `.` des `Source Path`.
 > Vous connaissez le `.gitignore`, utilisez-le !
 
 
-# 1. Premiers essais
+## 0.3 Premiers essais
 
-## 1.2 Classe principale
+### 0.3.1 Classe principale
 
 En Java, la classe principale est d'un nom libre, mais celle-ci doit comporter une méthode statique `main`, idéalement sous le prototype `public static void main(String[] args)`.
 
@@ -68,7 +68,7 @@ Seule une classe avec ce main doit exister dans votre projet. C'est votre classe
 > Vous ne pouvez définir plus d'une classe par fichier.
 > Il existe des "astuces" pour créer des classes internes, mais ceci est un élémennt pour des besoins très spécifiques.
 
-## 1.3 Classe de manipulation de flux d'entrée
+### 0.3.2 Classe de manipulation de flux d'entrée
 
 La saisie utilisateur peut être lue via le flux `System.in`.
 Différents utilitaires permettent d'interagir avec ce flux, dont le plus connu est `Scanner` :
@@ -109,7 +109,7 @@ System.out.println("Hello, "+name);
 
 </details>
 
-## 1.4 Pour les entiers
+### 0.3.3 Pour les entiers
 
 Faisons donc `askInt`, qui fait la même chose pour des entiers, afin de demander à l'utilisateur son âge !
 
@@ -137,7 +137,7 @@ System.out.println("Age= "+String.valueOf(r));
 </details>
 
 
-## 1.5 Réusage
+### 0.3.4 Réusage
 
 Testez de demander le nom, puis l'âge... Que se passe-t-il ?
 
@@ -211,7 +211,7 @@ public int askInt(String question) {
 
 On peut toujours créer plusieurs instances de la classe `CLI`, ce qui pourrait poser des soucis de conflits (puisqu'on se base sur le même flux), et semble peu logique : une seule instance de `CLI` devrait exister à un instant T. Comment résoudriez-vous ce problème ?
 
-## 1.6 Affichage
+### 0.3.5 Affichage
 
 Nous allons maintenant rajouter une méthode d'affichage, `CLI print(String txt[, boolean eol = true])`. Celle-ci affichera `txt`, avec un saut de ligne si l'argument `eol` est fourni à `true` (ou s'il est omi). Cette méthode renverra l'objet en lui-même, ce qui permettra de chaîner les appels (ex : `cli.print(a, false).print(b, false).print(c);` ).
 
@@ -235,7 +235,7 @@ public CLI print(String txt, boolean eol) {
 
 </details>
 
-## 1.7 Saisie d'un décimal
+### 0.3.6 Saisie d'un décimal
 
 Ajoutez une méthode pour la saisie d'un décimal. Testez vos méthodes dans votre `main`.
 
@@ -290,7 +290,7 @@ public class Product {
 Effectuez un test de création dans votre classe principale de deux objets Product de même nom, que vous comparerez (et afficherez le résultat).
 
 <details>
-    <summary></summary>
+    <summary>Proposition de solution</summary>
 
 ```java
 Product p1 = new Product("A");
@@ -417,7 +417,7 @@ Modifiez ensuite le prix de `p1`, et affichez (grâce à `toString`) votre objet
 
 > [!Important]
 > Java passe TOUS les arguments par valeur par défaut.
-> Mais comme la "valeur" d'un objet est en réalité sa référence en mémoire (cf. section 1.1.1 ), ces échanges d'objets permettent d'accéder à l'objet réellement stocké.
+> Mais comme la "valeur" d'un objet est en réalité sa référence en mémoire (cf. section 2.1 ), ces échanges d'objets permettent d'accéder à l'objet réellement stocké.
 > Modifier le contenu d'un objet est nommé "mutation"; on dit qu'un objet est muté.
 
 ## 3.3 Méthode `findProduct`
