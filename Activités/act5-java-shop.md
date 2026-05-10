@@ -55,7 +55,9 @@ Attention en ce cas à retirer `.` des `Source Path`.
 > Vous connaissez le `.gitignore`, utilisez-le !
 
 
-# 1. Classe principale
+# 1. Premiers essais
+
+## 1.2 Classe principale
 
 En Java, la classe principale est d'un nom libre, mais celle-ci doit comporter une méthode statique `main`, idéalement sous le prototype `public static void main(String[] args)`.
 
@@ -66,7 +68,7 @@ Seule une classe avec ce main doit exister dans votre projet. C'est votre classe
 > Vous ne pouvez définir plus d'une classe par fichier.
 > Il existe des "astuces" pour créer des classes internes, mais ceci est un élémennt pour des besoins très spécifiques.
 
-# 2. Classe de manipulation de flux d'entrée
+## 1.3 Classe de manipulation de flux d'entrée
 
 La saisie utilisateur peut être lue via le flux `System.in`.
 Différents utilitaires permettent d'interagir avec ce flux, dont le plus connu est `Scanner` :
@@ -107,7 +109,7 @@ System.out.println("Hello, "+name);
 
 </details>
 
-# 3. Pour les entiers
+## 1.4 Pour les entiers
 
 Faisons donc `askInt`, qui fait la même chose pour des entiers, afin de demander à l'utilisateur son âge !
 
@@ -135,7 +137,7 @@ System.out.println("Age= "+String.valueOf(r));
 </details>
 
 
-# 4. Réusage
+## 1.5 Réusage
 
 Testez de demander le nom, puis l'âge... Que se passe-t-il ?
 
@@ -209,7 +211,7 @@ public int askInt(String question) {
 
 On peut toujours créer plusieurs instances de la classe `CLI`, ce qui pourrait poser des soucis de conflits (puisqu'on se base sur le même flux), et semble peu logique : une seule instance de `CLI` devrait exister à un instant T. Comment résoudriez-vous ce problème ?
 
-## 0.6 Affichage
+## 1.6 Affichage
 
 Nous allons maintenant rajouter une méthode d'affichage, `CLI print(String txt[, boolean eol = true])`. Celle-ci affichera `txt`, avec un saut de ligne si l'argument `eol` est fourni à `true` (ou s'il est omi). Cette méthode renverra l'objet en lui-même, ce qui permettra de chaîner les appels (ex : `cli.print(a, false).print(b, false).print(c);` ).
 
@@ -233,7 +235,7 @@ public CLI print(String txt, boolean eol) {
 
 </details>
 
-## 0.7 Saisie d'un décimal
+## 1.7 Saisie d'un décimal
 
 Ajoutez une méthode pour la saisie d'un décimal. Testez vos méthodes dans votre `main`.
 
@@ -246,9 +248,9 @@ Ajoutez une méthode pour la saisie d'un décimal. Testez vos méthodes dans vot
 En se basant sur votre conception dans l'[activité 2](https://github.com/esirem-chassel/3aa-progadv/blob/main/Activit%C3%A9s/act2-uml-basics.md), commencez à développer votre application.
 Il est conseillé de créer un nouveau projet dédié, et de reprendre votre classe CLI du projet précédent.
 
-## 1.1 Classe Produit
+# 2. Classe Produit
 
-### 1.1.1
+## 2.1 Classe de base
 
 Créez une classe `Product` répondant au diagramme UML de la classe Produit.
 
@@ -300,13 +302,13 @@ System.out.println(p1 == p2);
 
 Que constatez-vous ?
 
-## 1.1.2
+## 2.2 toString
 
 En plus de créer votre classe Produit tel que demandé auparavant, créez une méthode `String toString()` qui renverra l'objet sous la forme `<nom> (<prix>)`.
 
 > [!Tip]
 > Une méthode `String toString()` en Java est quelque peu magique : elle sera appellée automatiquement dès que vous essayerez de "convertir" votre objet en chaîne de caractères,
-> y compris, par exemple, quand vous tenterez de l'afficher en console !
+> y compris, par exemple, quand vous tenterez de l'afficher en console (si vous convertissez en chaîne !) !
 
 <details>
     <summary>Proposition de solution</summary>
@@ -341,9 +343,9 @@ public class Product {
 
 </details>
 
-## 1.2 Classe Application
+# 3. Classe Application
 
-### 1.2.1 Création produit
+## 3.1 Création produit
 
 La classe `Application` contient notemment une liste de produits.
 Créons un tableau simple pour commencer. Dans votre constructeur de la classe `Application`, initialisez donc votre tableau :
@@ -394,7 +396,7 @@ public class Application {
 > Ceci (l'usage d'`ArrayList` et non d'un array basique) est un détail d'implémentation, ce qui signifie que c'est un élément propre au langage.
 > Vous ne devez donc PAS le faire apparaître dans votre UML. Ce n'est pas une modification du système, mais un détail d'implémentation lié au langage.
 
-### 1.2.2 Tout Objet
+## 3.2 Tout Objet
 
 Nous allons tester, et voir un effet du "tout objet" adopté par Java.
 
@@ -418,7 +420,7 @@ Modifiez ensuite le prix de `p1`, et affichez (grâce à `toString`) votre objet
 > Mais comme la "valeur" d'un objet est en réalité sa référence en mémoire (cf. section 1.1.1 ), ces échanges d'objets permettent d'accéder à l'objet réellement stocké.
 > Modifier le contenu d'un objet est nommé "mutation"; on dit qu'un objet est muté.
 
-### 1.2.3 Méthode `findProduct`
+## 3.3 Méthode `findProduct`
 
 Implémentez la méthode recherchant un produit à partir de son nom. Si le produit n'est pas trouvé, on renverra la référence vers rien : `null`.
 
@@ -439,7 +441,7 @@ Product findProduct(String name) {
 
 </details>
 
-### 1.2.4 Méthode `setProductPrice`
+## 3.4 Méthode `setProductPrice`
 
 Cette méthode avait été ajouté pour permettre de directement modifier le prix d'un produit.
 Dans la conception, nous avons indiqué prendre en paramètre un produit et un prix. Implémentez la méthode.
@@ -462,7 +464,7 @@ Application setProductPrice(String name, double price) {
 
 </details>
 
-### 1.2.5 Garde-fou : homonyme
+## 3.5 Garde-fou : homonyme
 
 Nous avons câblé de plus en plus de méthodes sur le fait que le nom d'un produit est unique. Est-ce le cas actuellement ?
 
@@ -529,7 +531,9 @@ public static void main(String[] args) {
 }
 ```
 
-# 2. Classe Date
+# 4. Commandes
+
+## 4.1 Classe Date
 
 Une classe nécessaire pour la suite est la classe Date.
 Mais cette classe existe déjà dans Java !
@@ -569,6 +573,326 @@ System.out.println(d); // 2026-05-10
 
 </details>
 
+## 4.2 Classe Commande
+
+Créez la classe Commande *(comment dit-on en anglais ?)*.
+Pensez également à ajouter une méthode `toString` pour l'affichage et à tester !
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+import java.time.LocalDate;
+
+public class Order {
+    private Product product;
+    private int qtty;
+    private double unitPrice;
+    private LocalDate orderDate;
+    private LocalDate deliveryDate;
+
+    public Order(Product product, int qtty, double unitPrice, LocalDate orderDate) {
+        this.product = product;
+        this.qtty = qtty;
+        this.unitPrice = unitPrice;
+        this.orderDate = orderDate;
+    }
+
+    public Order setDeliveryDate(LocalDate deliveryDate) {
+        this.deliveryDate = deliveryDate;
+        return this;
+    }
+
+    public Order setQtty(int qtty) {
+        this.qtty = qtty;
+        return this;
+    }
+
+    public Order setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+        return this;
+    }
+
+    public Product getProduct() {
+        return this.product;
+    }
+
+    public int getQtty() {
+        return this.qtty;
+    }
+
+    public double getUnitPrice() {
+        return this.unitPrice;
+    }
+
+    public LocalDate getOrderDate() {
+        return this.orderDate;
+    }
+
+    public LocalDate getDeliveryDate() {
+        return this.deliveryDate;
+    }
+
+    public String toString() {
+        return "Commande de "
+            + String.valueOf(this.qtty)
+            + " " + this.product
+            + " (prix " + this.unitPrice + ")"
+            + " le " + this.orderDate
+            + ((null == this.deliveryDate)? "":(" arrivée prévue le "+this.deliveryDate));
+    }
+}
+
+// test dans main
+Order o = new Order(new Product("A"), 3, 10.4, LocalDate.of(2026, 5, 10));
+System.out.println(o);
+
+```
+
+</details>
 
 
+## 4.3 Intégration dans Application
 
+Intégrez les méthodes nécessaires à la gestion des commandes dans Application.
+
+### 4.3.1 Création de la commande
+
+Quand vous rédigez la méthode `createOrder`, que remarquez-vous comparé à la modélisation ?
+Pour le moment, modifiez la méthode pour garder la même signature avec les paramètres suivants :
+- `product` : le produit fourni
+- `qtty` : 1
+- `unitPrice` : le prix du produit fourni
+- `orderDate` : maintenant
+
+Testez votre méthode dans votre `main`.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+// contenu de Application
+private ArrayList<Product> inventory;
+private ArrayList<Order> orders;
+
+public Application() {
+    this.inventory = new ArrayList<Product>();
+    this.orders = new ArrayList<Order>();
+}
+
+Product createProduct(String name) throws ProductDuplicateException {
+    if(null != this.findProduct(name)) {
+        throw new ProductDuplicateException(name);
+    }
+    Product p = new Product(name);
+    this.inventory.add(p);
+    return p;
+}
+
+Order createOrder(Product product) {
+    Order o = new Order(product, 1, product.getPrice(), LocalDate.now());
+    this.orders.add(o);
+    return o;
+}
+
+// [...]
+
+public String toString() {
+    String r = "Produits :\n";
+    for(Product p: this.inventory) {
+        r += p.toString() + "\n";
+    }
+    r += "Commandes :\n";
+    for(Order o: this.orders) {
+        r += o.toString() + "\n";
+    }
+    return r;
+}
+
+// dans le main
+public static void main(String[] args) {
+    Application app = new Application();
+    try {
+        Product pa = app.createProduct("A");
+        app.createOrder(pa);
+    } catch(Exception e) { e.printStackTrace(); }
+    try {
+        app.createOrder(app.createProduct("B"));
+    } catch(Exception e) { e.printStackTrace(); }
+    System.out.println(app);
+}
+
+```
+
+</details>
+
+### 4.3.2 Méthodes de recherches de commande
+
+Implémentez les méthodes de recherche de commandes. Que remarquez-vous en ce qui concerne la méthode de recherche par produit ?
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public ArrayList<Order> findOrders() {
+    return this.orders;
+}
+
+public ArrayList<Order> findOrdersByDeliveryDate(LocalDate deliveryDate) {
+    ArrayList<Order> r = new ArrayList<Order>();
+    for(Order o: this.orders) {
+        if(o.getDeliveryDate().equals(deliveryDate)) {
+            r.add(o);
+        }
+    }
+    return r;
+}
+
+public ArrayList<Order> findOrdersByOrderDate(LocalDate orderDate) {
+    ArrayList<Order> r = new ArrayList<Order>();
+    for(Order o: this.orders) {
+        if(o.getOrderDate().equals(orderDate)) {
+            r.add(o);
+        }
+    }
+    return r;
+}
+
+public ArrayList<Order> findOrdersByProduct(Product product) {
+    ArrayList<Order> r = new ArrayList<Order>();
+    for(Order o: this.orders) {
+        if(o.getProduct().equals(product)) { // ???
+            r.add(o);
+        }
+    }
+    return r;
+}
+
+// test dans main
+public static void main(String[] args) {
+    Application app = new Application();
+    Product pa = null;
+    try {
+        pa = app.createProduct("A");
+        app.createOrder(pa);
+    } catch(Exception e) { e.printStackTrace(); }
+    try {
+        app.createOrder(app.createProduct("B"));
+    } catch(Exception e) { e.printStackTrace(); }
+    
+    ArrayList<Order> lo = app.findOrdersByProduct(pa);
+    System.out.println(lo); // commande trouvée
+    ArrayList<Order> lo2 = app.findOrdersByProduct(new Product("A"));
+    System.out.println(lo2); // commande non-trouvée ?
+}
+
+```
+
+</details>
+
+> [!Important]
+> En effet, nous en avions parlé avant, mais les objets sont des références. Comparer deux références n'a de sens que si elles sont identiques.
+> Ici, notre "nouveau" produit A est différent du produit géré par l'inventaire de `Application`.
+> Nous avons plusieurs manières de résoudre cela, mais pour le moment, nous allons adopter...
+
+Implémentez la méthode `equals` dans votre classe Product qui va permettre de comparer deux produits et déclarer ces produits identiques si leur nom est identique.
+Testez à nouveau et comparez votre résultat !
+
+> [!Caution]
+> N'utilisez pas `@override` ici. Vous voulez comparer deux produits ensemble.
+> Vous pouvez, si le coeur vous en dit, utilisez l'override et utiliser la réflexion pour vérifier si l'objet de comparaison est un produit (et sinon, appeller la méthode parent).
+
+# 5. Stock
+
+## 5.1 Refactor
+
+Jusqu'ici nous avions nommé notre base produits "inventory". Changeons cela avec l'introduction des stocks, et nommons la base produits `productsBase`.
+
+> [!Tip]
+> Votre IDE est capable de renommer une propriété en renommant TOUS les endroits où cette propriété est utilisée.
+> UTILISEZ VOTRE IDE !! Vous n'avez pas besoin d'une IA pour ça.
+
+## 5.2 Classe Stock
+
+Créez la classe Stock. Pour cette classe, nous allons utiliser la fonctionnalité des `record`.
+
+Que constatez-vous concernant, par exemple, la possibilité de changer la quantité en stock ? Implémentez donc une alternative.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public class Stock {
+    private Product product;
+    private int qtty;
+    public Stock(Product product, int qtty) {
+        this.product = product;
+        this.qtty = qtty;
+    }
+
+    public Stock setQtty(int qtty) {
+        this.qtty = qtty;
+        return this;
+    }
+
+    public Product getProduct() {
+        return this.product;
+    }
+
+    public int getQtty() {
+        return this.qtty;
+    }
+
+    @Override
+    public String toString() {
+        return this.product.getName() + " x" + String.valueOf(this.qtty);
+    }
+}
+```
+
+</details>
+
+## 5.3 Intégration dans Application
+
+Ajoutez la gestion des stocks dans votre classe application !
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+private ArrayList<Product> productsBase;
+private ArrayList<Order> orders;
+private ArrayList<Stock> inventory;
+
+public Application() {
+    this.productsBase = new ArrayList<Product>();
+    this.orders = new ArrayList<Order>();
+    this.inventory = new ArrayList<Stock>();
+}
+
+Application setStock(Product product, int qtty) {
+    boolean found = false;
+    for(Stock s: this.inventory) {
+        if(s.getProduct().equals(product)) {
+            s.setQtty(s.getQtty() + qtty);
+            found = true;
+        }
+    }
+    if(!found) {
+        this.inventory.add(new Stock(product, qtty));
+    }
+    return this;
+}
+
+int getStock(Product product) {
+    int r = 0;
+    for(Stock s: this.inventory) {
+        if(s.getProduct().equals(product)) {
+            r = s.getQtty();
+        }
+    }
+    return r;
+}
+```
+
+</details>
