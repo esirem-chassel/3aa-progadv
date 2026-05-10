@@ -248,6 +248,60 @@ Il est conseillé de créer un nouveau projet dédié, et de reprendre votre cla
 
 ## 1.1 Classe Produit
 
+### 1.1.1
+
+Créez une classe `Product` répondant au diagramme UML de la classe Produit.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public class Product {
+    private String name;
+    private double price;
+    public Product(String name) {
+        this.name = name;
+    }
+
+    public Product setPrice(double price) {
+        this.price = price;
+        return this;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public double getPrice() {
+        return this.price;
+    }
+}
+```
+
+</details>
+
+> [!Caution]
+> Vous remarquerez que j'ai changé le nom de `Produit` vers `Product`.
+> Cette étape peut se produire avant ou après la modélisation UML à votre convenance; j'ai tendance néanmoins à vous conseiller de réaliser la traduction durant la modélisation.
+
+
+Effectuez un test de création dans votre classe principale de deux objets Product de même nom, que vous comparerez (et afficherez le résultat).
+
+<details>
+    <summary></summary>
+
+```java
+Product p1 = new Product("A");
+Product p2 = new Product("A");
+System.out.println(p1 == p2);
+```
+
+</details>
+
+Que constatez-vous ?
+
+## 1.1.2
+
 En plus de créer votre classe Produit tel que demandé auparavant, créez une méthode `String toString()` qui renverra l'objet sous la forme `<nom> (<prix>)`.
 
 > [!Tip]
@@ -287,11 +341,9 @@ public class Product {
 
 </details>
 
-> [!Caution]
-> Vous remarquerez que j'ai changé le nom de `Produit` vers `Product`.
-> Cette étape peut se produire avant ou après la modélisation UML à votre convenance; j'ai tendance néanmoins à vous conseiller de réaliser la traduction durant la modélisation.
-
 ## 1.2 Classe Application
+
+### 1.2.1 Création produit
 
 La classe `Application` contient notemment une liste de produits.
 Créons un tableau simple pour commencer. Dans votre constructeur de la classe `Application`, initialisez donc votre tableau :
@@ -342,6 +394,8 @@ public class Application {
 > Ceci (l'usage d'`ArrayList` et non d'un array basique) est un détail d'implémentation, ce qui signifie que c'est un élément propre au langage.
 > Vous ne devez donc PAS le faire apparaître dans votre UML. Ce n'est pas une modification du système, mais un détail d'implémentation lié au langage.
 
+### 1.2.2 Tout Objet
+
 Nous allons tester, et voir un effet du "tout objet" adopté par Java.
 
 Créez donc une méthode `String toString()` dans `Application` comme suit :
@@ -358,4 +412,163 @@ public String toString() {
 
 Dans votre `main`, ajouter l'instanciation d'un nouvel objet `Application`, et créez `p1` et `p2` respectivement de nom "ABC" et "DEF".
 Modifiez ensuite le prix de `p1`, et affichez (grâce à `toString`) votre objet `Application`. Que constatez-vous ?
+
+> [!Important]
+> Java passe TOUS les arguments par valeur par défaut.
+> Mais comme la "valeur" d'un objet est en réalité sa référence en mémoire (cf. section 1.1.1 ), ces échanges d'objets permettent d'accéder à l'objet réellement stocké.
+> Modifier le contenu d'un objet est nommé "mutation"; on dit qu'un objet est muté.
+
+### 1.2.3 Méthode `findProduct`
+
+Implémentez la méthode recherchant un produit à partir de son nom. Si le produit n'est pas trouvé, on renverra la référence vers rien : `null`.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+Product findProduct(String name) {
+    Product r = null;
+    for(Product p: this.inventory) {
+        if(p.getName().equals(name)) {
+            r = p;
+        }
+    }
+    return r;
+}
+```
+
+</details>
+
+### 1.2.4 Méthode `setProductPrice`
+
+Cette méthode avait été ajouté pour permettre de directement modifier le prix d'un produit.
+Dans la conception, nous avons indiqué prendre en paramètre un produit et un prix. Implémentez la méthode.
+Que remarquez-vous ?
+
+Modifiez votre méthode pour qu'elle prenne en paramètre un nom de produit et un prix à la place.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+Application setProductPrice(String name, double price) {
+    Product p = this.findProduct(name);
+    if(p != null) {
+        p.setPrice(price);
+    }
+    return this;
+}
+```
+
+</details>
+
+### 1.2.5 Garde-fou : homonyme
+
+Nous avons câblé de plus en plus de méthodes sur le fait que le nom d'un produit est unique. Est-ce le cas actuellement ?
+
+Nous allons ajouter une exception lors de la création d'un produit : si celui-ci existe déjà, nous refuserons la création et jetterons une exception.
+
+Créez une classe `ProductDuplicateException`, qui héritera de la classe de base de Java `Exception`, la classe de base des exceptions.
+
+Le constructeur de votre classe prendra le nom du produit en paramètre, et appellera le constructeur parent avec le message "The Product XXX already exists" (en remplaçant évidemment XXX par le nom du produit).
+
+> [!Tip]
+> Rappel : l'appel à la méthode parente se fait via `super`.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+public class ProductDuplicateException extends Exception {
+    public ProductDuplicateException(String productName) {
+        super("The product "+productName+" already exists");
+    }
+}
+```
+
+</details>
+
+Maintenant, jetez cette exception dans votre méthode `createProduct` si un produit de ce nom existe déjà.
+Que remarquez-vous, via votre IDE ?
+Choisissez l'option d'ajouter l'instruction `throws`.
+
+> [!Tip]
+> Rappel : on jette une exception avec le mot-clef `throw`, en initialisation un nouvel objet de type `Exception`.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+Product createProduct(String name) throws ProductDuplicateException {
+    if(null != this.findProduct(name)) {
+        throw new ProductDuplicateException(name);
+    }
+    Product p = new Product(name);
+    this.inventory.add(p);
+    return p;
+}
+```
+
+</details>
+
+Si vous tentez maintenant d'utiliser la méthode `createProduct`, vous remarquerez que votre IDE demande à ce que vous interceptiez l'exception, comme avant.
+Si vous ne le faites pas, votre programme peut planter sans aucun contrôle, et ceci déplaît à Java.
+Saisissez le code suivant, et testez. Que constatez-vous ?
+
+```java
+public static void main(String[] args) {
+    Application app = new Application();
+    try {
+        Product p1 = app.createProduct("A");
+        Product p2 = app.createProduct("A");
+        Product p3 = app.createProduct("B");
+    } catch(Exception e) {
+        e.printStackTrace();
+    }
+    System.out.println(app);
+}
+```
+
+# 2. Classe Date
+
+Une classe nécessaire pour la suite est la classe Date.
+Mais cette classe existe déjà dans Java !
+
+Testez le code suivant :
+
+```java
+public static void main(String[] args) {
+    Date d = new Date(2026, 5, 10);
+    System.out.println(d);
+}
+```
+
+Vous devriez constater deux anomalies.
+
+<details>
+    <summary>A voir</summary>
+
+Pour commmencer, le constructeur `Date` prenant ces paramètres en compte est *déprécié*.
+Cela signifie qu'il sera retiré, tôt ou tard, de Java.
+Son usage est donc logiquement déconseillé.
+Généralement, il y a de bonnes raisons à ces dépréciations, et on peut constater laquelle ici : l'année indiquée est... 3926 ??
+La classe `Date` se base en effet sur une considération de `Date` commençant en 1900, pour permettre des dates de 1900 à... 2000.
+Cette classe a également de nombreux bugs et soucis au fil de l'ajout de fonctionnalités (comme les TZ ou la DST), qui ont amené à la création d'alternatives.
+
+</details>
+
+Contrairement à la recommandation, utilisons à la place [la "nouvelle" alternative](https://www.oracle.com/technical-resources/articles/java/jf14-date-time.html) : `LocaleDate`.
+
+<details>
+    <summary>Proposition de solution</summary>
+
+```java
+LocalDate d = LocalDate.of(2026, 5, 10);
+System.out.println(d); // 2026-05-10
+```
+
+</details>
+
+
+
 
