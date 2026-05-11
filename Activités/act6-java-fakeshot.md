@@ -28,6 +28,15 @@ A chaque tour, le joueur peut :
 - utiliser autant de jokers qu'il le désire, s'il en a en stock
 - soit tirer sur soi-même, soit tirer sur l'adversaire
 
+# Consignes
+
+Toute l'application est à réaliser en Java en ligne de commande. Aucune interface n'est nécessaire; pour le moment.
+
+Sont attendus :
+- le diagramme UML de classes du système
+- un diagramme objet de l'état d'initialisation du système
+- le code d'ensemble, en Java du système
+
 # Annexes
 
 ## Liste des jokers
