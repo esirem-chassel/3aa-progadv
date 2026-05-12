@@ -27,6 +27,9 @@ A chaque manche :
 A chaque tour, le joueur peut :
 - utiliser autant de jokers qu'il le désire, s'il en a en stock
 - soit tirer sur soi-même, soit tirer sur l'adversaire
+  - si on s'est tiré dessus, et que la balle est à blanc, alors on peut choisir à nouveau
+  - si on a tiré sur l'adversaire, quelle que soit le résultat, alors le tour se termine
+  - si on s'est tiré dessus, et que la balle est réelle, alors le tour se termine
 
 # Consignes
 
@@ -42,10 +45,10 @@ Sont attendus :
 ## Liste des jokers
 
 Jokers :
-- voir la prochaine balle
-- soin d'une unité de vie
-- obtenir 2 nouveaux jokers
-- inverser la prochaine balle
-- la prochaine balle inflige 2x de dégats
-- voir au hasard une balle quelque part (et sa position)
-- effectuer une action supplémentaire (se tirer dessus ou sur l'autre)
+- voir la prochaine balle (ne termine pas le tour)
+- soin d'une unité de vie (ne termine pas le tour)
+- obtenir 2 nouveaux jokers (termine pas le tour)
+- inverser la prochaine balle (ne termine pas le tour)
+- la prochaine balle inflige 2x de dégats (ne termine pas le tour)
+- voir au hasard une balle quelque part (et sa position) (ne termine pas le tour)
+- effectuer une action supplémentaire (se tirer dessus ou sur l'autre) (ne termine pas le tour)
