@@ -24,7 +24,7 @@ Depuis le jeu, on peut :
 - "donner" la communauté à quelqu'un d'autre (uniquement si on en est responsable) : `POST /communities/{0}/lead`
 - supprimer la communauté (uniquement si on en est responsable) : `DELETE /communities/{0}`
 
-Il est à noter que la suppression d'une communauté ne la supprime pas réellement, mais la place "en sursis".
+Il est à noter que la suppression d'une communauté ne la supprime pas réellement, mais la place "en attente".
 Une communauté "en sursis" est réellement supprimée après un mois sans action d'édition de la part de son responsable.
 
 Enfin, un site web permet aussi d'effectuer tous les appels de type consultation.
@@ -44,5 +44,5 @@ Créer le diagramme d'activité détaillant l'ajout d'un membre.
 # 4. Diagramme de déploiement
 
 Proposer un diagramme de déploiement du système de communautés.
-Toutes les données du sustème seront dans une base de données MongoDB.
+Toutes les données du système seront dans une base de données MongoDB.
 On choisira Nodejs en tant que serveur web et serveur applicatif.
