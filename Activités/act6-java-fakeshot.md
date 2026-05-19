@@ -47,7 +47,7 @@ Sont attendus :
 Jokers :
 - voir la prochaine balle (ne termine pas le tour)
 - soin d'une unité de vie (ne termine pas le tour)
-- obtenir 2 nouveaux jokers (termine pas le tour)
+- obtenir 2 nouveaux jokers (termine le tour)
 - inverser la prochaine balle (ne termine pas le tour)
 - la prochaine balle inflige 2x de dégats (ne termine pas le tour)
 - voir au hasard une balle quelque part (et sa position) (ne termine pas le tour)
